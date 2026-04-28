@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YOHA — The beauty of unfinished</title>
+  <meta name="description" content="革の余白を、あなたへ。使い込むほどに育つ、一点もののレザークラフト。">
+
+  <meta property="og:type"        content="website">
+  <meta property="og:site_name"   content="YOHA">
+  <meta property="og:title"       content="YOHA — The beauty of unfinished">
+  <meta property="og:description" content="革の余白を、あなたへ。使い込むほどに育つ、一点もののレザークラフト。">
+  <meta property="og:url"         content="https://example.com">
+  <meta property="og:image"       content="https://example.com/assets/images/og-image.png">
+
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="YOHA — The beauty of unfinished">
+  <meta name="twitter:description" content="革の余白を、あなたへ。使い込むほどに育つ、一点もののレザークラフト。">
+  <meta name="twitter:image"       content="https://example.com/assets/images/og-image.png">
+
+  <link rel="icon" href="assets/images/favicons/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/images/favicons/apple-touch-icon.svg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Noto+Serif+JP:wght@400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── TOKENS ────────────────────────────── */
+    :root {
+      --color-bg-base:    #f5f0eb;
+      --color-bg-surface: #faf8f5;
+      --color-text-100:   rgba(60, 56, 52, 1.0);
+      --color-text-80:    rgba(60, 56, 52, 0.8);
+      --color-text-75:    rgba(60, 56, 52, 0.75);
+      --color-line:       rgba(60, 56, 52, 0.15);
+      --font-serif: "Cormorant Garamond", "Noto Serif JP", serif;
+      --font-sans:  ui-sans-serif, system-ui, -apple-system, sans-serif;
+    }
+
+    /* ── RESET & BASE ──────────────────────── */
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+    html, body { margin: 0; padding: 0; }
+    h1, h2, h3, p { margin: 0; }
+    h1, h2, h3 { font-weight: inherit; font-size: inherit; }
+    body {
+      background: var(--color-bg-base);
+      color: var(--color-text-100);
+      font-family: var(--font-serif);
+      line-height: 1.9;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    ::selection { background: var(--color-text-100); color: var(--color-bg-base); }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── LAYOUT PRIMITIVES ─────────────────── */
+
+    /* Stack: 子要素間の縦スペースを管理 */
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--stack-space, 24px);
+    }
+
+    /* Box: max-width による横幅制限 */
+    .container         { max-width: 1100px; margin-inline: auto; }
+    .container--narrow { max-width: 720px; }
+
+    /* ── SECTION ──────────────────────────── */
+    section {
+      padding-inline: 24px;
+      --stack-space: 56px;
+    }
+
+    .section-header {
+      text-align: center;
+      --stack-space: 16px;
+    }
+    /* ── TYPOGRAPHY ───────────────────────── */
+    .text-body {
+      font-size: 1rem;
+      line-height: 2.5;
+      letter-spacing: 0.05em;
+      color: var(--color-text-75);
+      text-align: center;
+    }
+
+    .label {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--color-text-75);
+      display: block;
+    }
+    .label--jp { letter-spacing: 0.5em; }
+
+    /* ── RESPONSIVE BREAKS ────────────────── */
+    .br-sp { display: none; }
+
+    /* ── DIVIDERS ─────────────────────────── */
+    .divider {
+      width: 128px;
+      height: 1px;
+      background: var(--color-line);
+      margin-inline: auto;
+    }
+    .divider--vertical {
+      width: 1px;
+      height: 64px;
+      background: var(--color-line);
+      margin-inline: auto;
+    }
+
+    /* ── CARD ─────────────────────────────── */
+    .card {
+      background: repeating-linear-gradient(135deg, #cdc4b3 0, #cdc4b3 1px, #c2b9a7 1px, #c2b9a7 12px);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .card__image {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .card:hover .card__image { transform: scale(1.1); }
+    .card__overlay {
+      position: absolute;
+      inset: 0;
+      background: color-mix(in srgb, var(--color-bg-base) 80%, transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .card:hover .card__overlay { opacity: 1; }
+    .card__title {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      letter-spacing: 0.05em;
+      color: var(--color-text-100);
+      text-align: center;
+    }
+    .card__subtitle {
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      color: var(--color-text-75);
+    }
+
+    /* ── SOCIAL LINK ──────────────────────── */
+    .social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 10px 0 0;
+      width: 180px;
+      height: 60px;
+      border: 1px solid var(--color-line);
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      color: var(--color-text-75);
+      transition: background 0.25s, color 0.25s;
+    }
+    .social-link:hover {
+      background: rgba(60, 56, 52, 0.05);
+      color: var(--color-text-100);
+    }
+    .social-link__logo {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      flex-shrink: 0;
+      mix-blend-mode: multiply;
+    }
+    .social-link__logo--instagram { padding: 10px; }
+
+    /* ── SITE HEADER ──────────────────────── */
+    .site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      padding: 24px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--color-bg-surface);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .site-header__logo {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      letter-spacing: 0.15em;
+      color: var(--color-text-100);
+    }
+    .site-nav { display: flex; gap: 32px; }
+    .site-nav__link {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-text-75);
+      transition: color 0.3s;
+    }
+    .site-nav__link:hover { color: var(--color-text-100); }
+
+    /* ── HERO ─────────────────────────────── */
+    .hero {
+      background: var(--color-bg-surface);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .hero__heading {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: 4.5rem;
+      line-height: 1.7;
+      letter-spacing: 0.22em;
+      color: var(--color-text-100);
+    }
+    .hero__inner   { --stack-space: 32px; }
+    .hero__message { --stack-space: 24px; }
+    .hero__tagline {
+      font-size: 1.25rem;
+      letter-spacing: 0.4em;
+      color: var(--color-text-75);
+    }
+    .hero__name {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      letter-spacing: 0.15em;
+      color: var(--color-text-100);
+    }
+
+    /* ── PHILOSOPHY ───────────────────────── */
+    .philosophy { background: var(--color-bg-base); padding-block: 120px; }
+    .philosophy__statement {
+      font-size: 2rem;
+      letter-spacing: 0.1em;
+      color: var(--color-text-80);
+      text-align: center;
+      --stack-space: 64px;
+    }
+    .philosophy__content  { --stack-space: 64px; }
+
+    /* ── WORKS ────────────────────────────── */
+    .works { background: var(--color-bg-surface); padding-block: 120px; }
+    .works-grid {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .works-grid__item:nth-child(1) { grid-column: 1 / 3; grid-row: 1 / 3; }
+    .works-grid__item:nth-child(2) { grid-column: 3; grid-row: 1; }
+    .works-grid__item:nth-child(3) { grid-column: 4; grid-row: 1; }
+    .works-grid__item:nth-child(4) { grid-column: 3; grid-row: 2; }
+    .works-grid__item:nth-child(5) { grid-column: 4; grid-row: 2; }
+
+    /* ── PROCESS ──────────────────────────── */
+    .process { background: var(--color-bg-base); padding-block: 120px; }
+    .feature-image { max-width: 760px; margin-inline: auto; }
+    .feature-image img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+    .process__prose {
+      text-align: center;
+      --stack-space: 32px;
+    }
+    .process__lead {
+      font-size: 1.5rem;
+      letter-spacing: 0.1em;
+      color: var(--color-text-80);
+    }
+
+    /* ── SHOP ─────────────────────────────── */
+    .shop { background: var(--color-bg-surface); padding-block: 120px; }
+    .social-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 48px;
+    }
+
+    /* ── SITE FOOTER ──────────────────────── */
+    .site-footer {
+      background: var(--color-bg-base);
+      padding-block: 120px;
+      padding-inline: 24px;
+      text-align: center;
+      --stack-space: 32px;
+    }
+    .site-footer__identity { --stack-space: 16px; }
+    .site-footer__brand-mark {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      color: var(--color-text-100);
+      letter-spacing: 0.15em;
+    }
+    .site-footer__tagline {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-text-75);
+    }
+    .site-footer__copyright {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      letter-spacing: 0.32em;
+      color: var(--color-text-75);
+    }
+
+    /* ── RESPONSIVE ───────────────────────── */
+    @media (max-width: 640px) {
+      .br-sp { display: inline; }
+
+      .text-body {
+        font-size: 0.875rem;
+        line-height: 2.0;
+      }
+      .site-header { padding: 16px 24px; }
+      .site-nav    { display: none; }
+
+      .divider           { width: 96px; }
+      .divider--vertical { height: 48px; }
+
+      .hero__inner   { --stack-space: 24px; }
+      .hero__message { --stack-space: 16px; }
+      .hero__heading { font-size: 2.25rem; }
+      .hero__tagline { font-size: 1rem; }
+      .hero__name    { font-size: 0.875rem; }
+
+      section { --stack-space: 32px; }
+
+      .philosophy__statement { font-size: 1.25rem; --stack-space: 48px; }
+      .philosophy__content   { --stack-space: 48px; }
+
+      .works-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      .works-grid__item:nth-child(1) { grid-column: 1 / 3; grid-row: 1; }
+      .works-grid__item:nth-child(1) .card__image { aspect-ratio: 4 / 3; }
+      .works-grid__item:nth-child(2) { grid-column: 1; grid-row: 2; }
+      .works-grid__item:nth-child(3) { grid-column: 2; grid-row: 2; }
+      .works-grid__item:nth-child(4) { grid-column: 1; grid-row: 3; }
+      .works-grid__item:nth-child(5) { grid-column: 2; grid-row: 3; }
+
+      .process__prose { --stack-space: 24px; }
+      .process__lead  { font-size: 1rem; }
+      .social-links   { margin-top: 32px; }
+      .social-link    { width: 160px; }
+
+      .site-header__logo       { font-size: 1.125rem; }
+      .site-footer__brand-mark { font-size: 1.5rem; }
+
+      .philosophy, .works, .process, .shop, .site-footer { padding-block: 64px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <a href="#" class="site-header__logo">YOHA</a>
+  <nav class="site-nav">
+    <a href="#philosophy" class="site-nav__link">Philosophy</a>
+    <a href="#works"      class="site-nav__link">Works</a>
+    <a href="#process"    class="site-nav__link">Process</a>
+    <a href="#shop"       class="site-nav__link">Shop</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="stack hero__inner">
+    <div class="stack hero__message">
+      <h1 class="hero__heading">The&nbsp;beauty<br>of&nbsp;unfinished.</h1>
+      <p class="hero__tagline">不完全なほど、美しい</p>
+    </div>
+    <div class="divider"></div>
+    <p class="hero__name">YOHA</p>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section id="philosophy" class="philosophy stack">
+  <div class="section-header stack">
+    <h2 class="label label--jp">Philosophy</h2>
+    <div class="divider--vertical"></div>
+  </div>
+  <div class="stack section-body">
+    <div class="container container--narrow">
+      <div class="stack philosophy__content">
+        <div class="stack philosophy__statement">
+          <p>使う人と共に成長し、<br>完成していく「余白」を。</p>
+          <p>ぎこちなくも、温かい、<br>そんな革製品を作っています。</p>
+        </div>
+        <div class="divider"></div>
+        <p class="text-body">
+          一つひとつの製品は、完璧ではありません。<br>
+          使い込むほどに深まる色、手に馴染む形、<br>
+          あなたと共に育つその過程を、<br class="br-sp">余白としてお届けします。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKS -->
+<section id="works" class="works stack">
+  <div class="section-header stack">
+    <h2 class="label label--jp">Works</h2>
+    <div class="divider--vertical"></div>
+  </div>
+  <div class="stack section-body">
+    <div class="container">
+      <ul class="works-grid" role="list">
+        <li class="works-grid__item card">
+          <img class="card__image" src="assets/images/works/wallet.jpg" alt="Wallet（財布）">
+          <div class="card__overlay">
+            <span class="card__title">Wallet</span>
+            <span class="card__subtitle">財布</span>
+          </div>
+        </li>
+        <li class="works-grid__item card">
+          <img class="card__image" src="assets/images/works/glasses-case.jpg" alt="Glasses Case（メガネケース）">
+          <div class="card__overlay">
+            <span class="card__title">Glasses Case</span>
+            <span class="card__subtitle">メガネケース</span>
+          </div>
+        </li>
+        <li class="works-grid__item card">
+          <img class="card__image" src="assets/images/works/book-cover.jpg" alt="Book Cover（ブックカバー）">
+          <div class="card__overlay">
+            <span class="card__title">Book Cover</span>
+            <span class="card__subtitle">ブックカバー</span>
+          </div>
+        </li>
+        <li class="works-grid__item card">
+          <img class="card__image" src="assets/images/works/card-case.jpg" alt="Card Case（カードケース）">
+          <div class="card__overlay">
+            <span class="card__title">Card Case</span>
+            <span class="card__subtitle">カードケース</span>
+          </div>
+        </li>
+        <li class="works-grid__item card">
+          <img class="card__image" src="assets/images/works/watch-strap.jpeg" alt="Watch Strap（時計ベルト）">
+          <div class="card__overlay">
+            <span class="card__title">Watch Strap</span>
+            <span class="card__subtitle">時計ベルト</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process" class="process stack">
+  <div class="section-header stack">
+    <h2 class="label label--jp">Process</h2>
+    <div class="divider--vertical"></div>
+  </div>
+  <div class="stack section-body">
+    <div class="feature-image">
+      <img src="assets/images/processes/process.jpg" alt="革細工の制作プロセス">
+    </div>
+    <div class="stack process__prose container container--narrow">
+      <p class="process__lead">ぎこちなくも、温かい手仕事</p>
+      <div class="divider"></div>
+      <p class="text-body">
+        機械では出せない、<br class="br-sp">人の手の温もり。<br><br class="br-sp">
+        完璧な直線ではなく、<br class="br-sp">少しの「ゆらぎ」があるからこそ、<br>
+        愛着が湧き、長く使い続けたくなる。<br><br class="br-sp">
+        そんな革製品を、一針一針、<br class="br-sp">丁寧に仕上げています。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- SHOP -->
+<section id="shop" class="shop stack">
+  <div class="section-header stack">
+    <h2 class="label label--jp">Shop</h2>
+    <div class="divider--vertical"></div>
+  </div>
+  <div class="stack section-body">
+    <div class="container container--narrow">
+      <p class="text-body">
+        制作の様子は、Instagramで。<br>
+        お気に入りの一点は、<br class="br-sp">BASEよりお求めいただけます。
+      </p>
+      <div class="social-links">
+        <a href="https://www.instagram.com/yoha_leather/" target="_blank" rel="noopener noreferrer" class="social-link">
+          <img src="assets/images/logos/instagram.svg" alt="" class="social-link__logo social-link__logo--instagram">
+          Instagram
+        </a>
+        <a href="https://yoha.buyshop.jp/" target="_blank" rel="noopener noreferrer" class="social-link">
+          <img src="assets/images/logos/base.png" alt="" class="social-link__logo">
+          BASE
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer stack">
+  <div class="stack site-footer__identity">
+    <p class="site-footer__brand-mark">YOHA</p>
+    <div class="divider--vertical"></div>
+    <p class="site-footer__tagline">THE BEAUTY OF UNFINISHED</p>
+  </div>
+  <p class="site-footer__copyright">© 2026 YOHA All Rights Reserved.</p>
+</footer>
+
+</body>
+</html>
